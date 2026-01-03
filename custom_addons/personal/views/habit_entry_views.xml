@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================ -->
+    <!-- HABIT ENTRY LIST VIEW -->
+    <!-- ============================================ -->
+    <record id="view_personal_habit_entry_list" model="ir.ui.view">
+        <field name="name">personal.habit.entry.list</field>
+        <field name="model">personal.habit.entry</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" default_order="date desc">
+                <field name="habit_icon" column_invisible="1"/>
+                <field name="date"/>
+                <field name="habit_id"/>
+                <field name="success" widget="boolean_toggle"/>
+                <field name="note"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- HABIT ENTRY FORM VIEW -->
+    <!-- ============================================ -->
+    <record id="view_personal_habit_entry_form" model="ir.ui.view">
+        <field name="name">personal.habit.entry.form</field>
+        <field name="model">personal.habit.entry</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group col="1">
+                        <group string="📝 Check-in Details">
+                            <field name="habit_id"/>
+                            <field name="date"/>
+                            <field name="success" widget="boolean_toggle"/>
+                        </group>
+                        <group string="📒 Notes">
+                            <field name="note" placeholder="How did it go? Any thoughts..."/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- HABIT ENTRY CALENDAR VIEW -->
+    <!-- ============================================ -->
+    <record id="view_personal_habit_entry_calendar" model="ir.ui.view">
+        <field name="name">personal.habit.entry.calendar</field>
+        <field name="model">personal.habit.entry</field>
+        <field name="arch" type="xml">
+            <calendar string="Habit Check-ins" date_start="date" color="habit_id" mode="month" quick_create="0">
+                <field name="habit_id"/>
+                <field name="success"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- HABIT ENTRY SEARCH VIEW -->
+    <!-- ============================================ -->
+    <record id="view_personal_habit_entry_search" model="ir.ui.view">
+        <field name="name">personal.habit.entry.search</field>
+        <field name="model">personal.habit.entry</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="habit_id"/>
+                <field name="date"/>
+                <filter name="filter_success" string="Completed" domain="[('success','=',True)]"/>
+                <filter name="filter_failed" string="Missed" domain="[('success','=',False)]"/>
+                <separator/>
+                <filter name="filter_today" string="Today" domain="[('date','=',context_today())]"/>
+                <filter name="filter_this_week" string="This Week" domain="[('date','&gt;=', (context_today() - datetime.timedelta(days=7)))]"/>
+                <filter name="filter_this_month" string="This Month" domain="[('date','&gt;=', (context_today().replace(day=1)))]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_habit" string="Habit" context="{'group_by':'habit_id'}"/>
+                    <filter name="group_date" string="Date" context="{'group_by':'date:day'}"/>
+                    <filter name="group_month" string="Month" context="{'group_by':'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- HABIT ENTRY ACTION -->
+    <!-- ============================================ -->
+    <record id="action_personal_habit_entry" model="ir.actions.act_window">
+        <field name="name">Check-ins</field>
+        <field name="res_model">personal.habit.entry</field>
+        <field name="view_mode">list,calendar,form</field>
+        <field name="context">{'search_default_filter_this_week': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Log your first habit check-in!
+            </p>
+            <p>
+                Track your daily progress and build consistent habits 💪
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_personal_habit_entry_action" name="Check-ins" parent="menu_personal_habits" action="action_personal_habit_entry" sequence="2" />
+</odoo>

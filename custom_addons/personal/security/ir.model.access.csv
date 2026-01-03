@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_personal_habit,access_personal_habit,model_personal_habit,base.group_user,1,1,1,1
+access_personal_habit_entry,access_personal_habit_entry,model_personal_habit_entry,base.group_user,1,1,1,1
+access_personal_journal,access_personal_journal,model_personal_journal,base.group_user,1,1,1,1
+access_personal_journal_tag,access_personal_journal_tag,model_personal_journal_tag,base.group_user,1,1,1,1
+access_personal_vision,access_personal_vision,model_personal_vision,base.group_user,1,1,1,1

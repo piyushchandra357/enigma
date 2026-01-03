@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root Menu - Personal App -->
+    <menuitem id="menu_personal_root" name="Personal" sequence="90" web_icon="personal,static/description/icon.png" />
+
+    <!-- Sub Menus -->
+    <menuitem id="menu_personal_habits" name="🎯 Habits" parent="menu_personal_root" sequence="1" />
+
+    <menuitem id="menu_personal_journals" name="📔 Journal" parent="menu_personal_root" sequence="2" />
+
+    <menuitem id="menu_personal_vision" name="🌟 Vision Board" parent="menu_personal_root" sequence="3" />
+</odoo>

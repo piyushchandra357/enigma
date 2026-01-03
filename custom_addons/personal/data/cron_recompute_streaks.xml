@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================ -->
+    <!-- SCHEDULED ACTION - Recompute Habit Streaks -->
+    <!-- ============================================ -->
+    <record id="ir_cron_recompute_habit_streaks" model="ir.cron">
+        <field name="name">Recompute Habit Streaks</field>
+        <field name="model_id" ref="model_personal_habit"/>
+        <field name="state">code</field>
+        <field name="code">model.search([('active', '=', True)]).recompute_streak()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================ -->
+    <!-- RECORD RULES - Users can only see their own data -->
+    <!-- ============================================ -->
+
+    <!-- Habit: Own records only -->
+    <record id="rule_personal_habit_user" model="ir.rule">
+        <field name="name">personal.habit: own records</field>
+        <field name="model_id" ref="model_personal_habit"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Habit Entry: Own records only -->
+    <record id="rule_personal_habit_entry_user" model="ir.rule">
+        <field name="name">personal.habit.entry: own records</field>
+        <field name="model_id" ref="model_personal_habit_entry"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Journal: Own records only -->
+    <record id="rule_personal_journal_user" model="ir.rule">
+        <field name="name">personal.journal: own records</field>
+        <field name="model_id" ref="model_personal_journal"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Journal Tags: All users can see all tags (shared) -->
+    <!-- No rule needed - tags are shared across users -->
+
+    <!-- Vision: Own records only -->
+    <record id="rule_personal_vision_user" model="ir.rule">
+        <field name="name">personal.vision: own records</field>
+        <field name="model_id" ref="model_personal_vision"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>

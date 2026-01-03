@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================ -->
+    <!-- JOURNAL KANBAN VIEW -->
+    <!-- ============================================ -->
+    <record id="view_personal_journal_kanban" model="ir.ui.view">
+        <field name="name">personal.journal.kanban</field>
+        <field name="model">personal.journal</field>
+        <field name="arch" type="xml">
+            <kanban default_order="date desc" class="o_kanban_small_column">
+                <field name="id"/>
+                <field name="title"/>
+                <field name="date"/>
+                <field name="mood"/>
+                <field name="mood_emoji"/>
+                <field name="content_preview"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click o_kanban_record" t-att-data-color="record.color.raw_value">
+                            <div class="oe_kanban_content">
+                                <!-- Header with Mood and Date -->
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="fs-2" t-esc="record.mood_emoji.raw_value or '📝'"/>
+                                    <small class="text-muted">
+                                        <field name="date" widget="date"/>
+                                    </small>
+                                </div>
+
+                                <!-- Title -->
+                                <div class="oe_kanban_details">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="title" placeholder="Untitled Entry"/>
+                                    </strong>
+                                </div>
+
+                                <!-- Content Preview -->
+                                <div class="mt-2 text-muted" style="font-size: 0.9em;">
+                                    <t t-esc="record.content_preview.raw_value"/>
+                                </div>
+
+                                <!-- Tags -->
+                                <div class="mt-2">
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- JOURNAL LIST VIEW -->
+    <!-- ============================================ -->
+    <record id="view_personal_journal_list" model="ir.ui.view">
+        <field name="name">personal.journal.list</field>
+        <field name="model">personal.journal</field>
+        <field name="arch" type="xml">
+            <list default_order="date desc">
+                <field name="mood_emoji" string="😊"/>
+                <field name="date"/>
+                <field name="title"/>
+                <field name="mood"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- JOURNAL FORM VIEW -->
+    <!-- ============================================ -->
+    <record id="view_personal_journal_form" model="ir.ui.view">
+        <field name="name">personal.journal.form</field>
+        <field name="model">personal.journal</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="title" placeholder="What's on your mind today?"/>
+                        </h1>
+                    </div>
+
+                    <group col="2">
+                        <field name="date"/>
+                        <field name="mood" widget="radio" options="{'horizontal': true}"/>
+                    </group>
+
+                    <group>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': false}" placeholder="Add tags..."/>
+                    </group>
+
+                    <notebook>
+                        <page string="📝 Content" name="content">
+                            <field name="content" widget="html" options="{'collaborative': true}" placeholder="Write your thoughts here..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- JOURNAL CALENDAR VIEW -->
+    <!-- ============================================ -->
+    <record id="view_personal_journal_calendar" model="ir.ui.view">
+        <field name="name">personal.journal.calendar</field>
+        <field name="model">personal.journal</field>
+        <field name="arch" type="xml">
+            <calendar string="Journal Entries" date_start="date" color="mood" mode="month" quick_create="0">
+                <field name="title"/>
+                <field name="mood_emoji"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- JOURNAL SEARCH VIEW -->
+    <!-- ============================================ -->
+    <record id="view_personal_journal_search" model="ir.ui.view">
+        <field name="name">personal.journal.search</field>
+        <field name="model">personal.journal</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="title"/>
+                <field name="content"/>
+                <field name="tag_ids"/>
+                <filter name="filter_today" string="Today" domain="[('date','&gt;=',context_today())]"/>
+                <filter name="filter_this_week" string="This Week" domain="[('date','&gt;=', (context_today() - datetime.timedelta(days=7)))]"/>
+                <separator/>
+                <filter name="filter_amazing" string="😄 Amazing" domain="[('mood','=','5')]"/>
+                <filter name="filter_good" string="🙂 Good" domain="[('mood','=','4')]"/>
+                <filter name="filter_neutral" string="😐 Neutral" domain="[('mood','=','3')]"/>
+                <filter name="filter_bad" string="😔 Bad" domain="[('mood','in',['1','2'])]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_mood" string="Mood" context="{'group_by':'mood'}"/>
+                    <filter name="group_date" string="Date" context="{'group_by':'date:day'}"/>
+                    <filter name="group_month" string="Month" context="{'group_by':'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- JOURNAL ACTION -->
+    <!-- ============================================ -->
+    <record id="action_personal_journal" model="ir.actions.act_window">
+        <field name="name">My Journal</field>
+        <field name="res_model">personal.journal</field>
+        <field name="view_mode">kanban,calendar,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Start your journaling journey!
+            </p>
+            <p>
+                Capture your thoughts, track your mood, and reflect on your day 📔
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_personal_journal_action" name="My Journal" parent="menu_personal_journals" action="action_personal_journal" sequence="1" />
+
+    <!-- ============================================ -->
+    <!-- JOURNAL TAGS ACTION (for management) -->
+    <!-- ============================================ -->
+    <record id="view_personal_journal_tag_list" model="ir.ui.view">
+        <field name="name">personal.journal.tag.list</field>
+        <field name="model">personal.journal.tag</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_personal_journal_tag" model="ir.actions.act_window">
+        <field name="name">Journal Tags</field>
+        <field name="res_model">personal.journal.tag</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="menu_personal_journal_tag_action" name="Tags" parent="menu_personal_journals" action="action_personal_journal_tag" sequence="2" />
+</odoo>
